@@ -1,0 +1,17 @@
+networks:
+  docker_net:
+    external: true
+
+services:
+  postgres-test-db:
+    image: postgres:16-alpine
+    hostname: postgres-test-db
+    container_name: postgres-test-db
+    environment:
+      POSTGRES_USER: "dev"
+      POSTGRES_DB: "dev"
+      POSTGRES_PASSWORD: "dev"
+    ports:
+      - "54323:5432"
+    networks:
+      - docker_net
