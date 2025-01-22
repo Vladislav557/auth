@@ -1,2 +1,2 @@
-./idea
-./jwt/*.pem
+.idea
+jwt
