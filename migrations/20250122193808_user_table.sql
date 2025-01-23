@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users
     uuid       UUID         NOT NULL UNIQUE,
     full_name  VARCHAR(255) NOT NULL,
     email      VARCHAR(255) NOT NULL UNIQUE,
+    password   VARCHAR(255) NOT NULL,
     phone      VARCHAR(11)  NOT NULL UNIQUE,
     roles      TEXT[]                DEFAULT ARRAY ['ROLE_USER'],
     created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
