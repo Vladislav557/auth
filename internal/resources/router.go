@@ -1,7 +1,8 @@
-package domain
+package resources
 
 import (
 	"fmt"
+	"github.com/Vladislav557/auth/internal/handlers"
 	"github.com/gin-gonic/gin"
 	"github.com/penglongli/gin-metrics/ginmetrics"
 	"time"
@@ -21,7 +22,8 @@ func RouterInit() *gin.Engine {
 }
 
 func addHandlers(r *gin.Engine) {
-	// TODO need to add handlers
+	rc := handlers.RegistrationHandler{}
+	r.POST("/registration", rc.Register)
 }
 
 func addMetrics(r *gin.Engine) {

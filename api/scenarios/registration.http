@@ -1,0 +1,10 @@
+### POST
+POST {{host}}/registration
+Content-Type: application/json
+
+{
+  "fullName": "Vlad Kiselev",
+  "email": "trololo557@gmail.com",
+  "phone": "79633028320",
+  "password": "123321"
+}
