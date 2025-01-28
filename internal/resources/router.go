@@ -22,7 +22,7 @@ func RouterInit() *gin.Engine {
 }
 
 func addHandlers(r *gin.Engine) {
-	rc := handlers.RegistrationHandler{}
+	rc := handlers.AuthHandler{}
 	r.POST("/registration", rc.Register)
 }
 

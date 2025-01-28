@@ -6,14 +6,14 @@ import (
 )
 
 type User struct {
-	ID        string
-	UUID      string
-	FullName  string
-	Email     string
-	Phone     string
-	Password  []byte
-	Roles     pg.StringArray
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt interface{}
+	ID        string         `json:"id"`
+	UUID      string         `json:"uuid"`
+	FullName  string         `json:"full_name"`
+	Email     string         `json:"email"`
+	Phone     string         `json:"phone"`
+	Password  []byte         `json:"password"`
+	Roles     pg.StringArray `json:"roles"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt interface{}    `json:"deleted_at"`
 }
