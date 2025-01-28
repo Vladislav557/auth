@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/Vladislav557/auth/internal/models/entity"
 	"github.com/Vladislav557/auth/internal/resources/postgres"
+	pg "github.com/lib/pq"
 )
 
 type RegistrationRepository struct{}
@@ -14,6 +15,7 @@ func (rr *RegistrationRepository) Registration(
 	passHash []byte,
 	uuid string) (entity.User, error) {
 	var user entity.User
+	roles := pg.StringArray{"ROLE_USER"}
 	err := postgres.DB.QueryRow(
 		"INSERT INTO users (uuid, full_name, email, password, phone, roles) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
 		uuid,
@@ -21,7 +23,7 @@ func (rr *RegistrationRepository) Registration(
 		email,
 		passHash,
 		phone,
-		`{"ROLE_USER"}`,
+		roles,
 	).Scan(&user.ID)
 	if err != nil {
 		return entity.User{}, err

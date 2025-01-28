@@ -1,6 +1,9 @@
 package entity
 
-import "time"
+import (
+	pg "github.com/lib/pq"
+	"time"
+)
 
 type User struct {
 	ID        string
@@ -9,7 +12,7 @@ type User struct {
 	Email     string
 	Phone     string
 	Password  []byte
-	Roles     []byte
+	Roles     pg.StringArray
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt interface{}

@@ -17,3 +17,6 @@ migrate-up:
 
 migrate-down:
 	goose -dir migrations postgres "$(DB)" down
+
+run:
+	go build github.com/Vladislav557/auth/cmd/auth
