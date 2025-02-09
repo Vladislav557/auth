@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS users
     roles      TEXT[]                DEFAULT ARRAY ['ROLE_USER'],
     created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP             DEFAULT NULL
+    deleted_at TIMESTAMP             DEFAULT NULL,
+    status     VARCHAR(100) NOT NULL DEFAULT 'new'
 );
 -- +goose StatementEnd
 

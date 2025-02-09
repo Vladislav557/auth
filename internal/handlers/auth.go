@@ -9,25 +9,56 @@ import (
 )
 
 type AuthHandler struct {
-	rs service.RegistrationService
+	authorizationService service.AuthorizationService
 }
 
-func (ah *AuthHandler) Register(ctx *gin.Context) {
-	var req request.RegistrationRequest
+func (authHandler *AuthHandler) SingUp(ctx *gin.Context) {
+	var req request.SingUpRequest
 	if err := ctx.BindJSON(&req); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		zap.L().Error("failed to parse registration request", zap.Error(err))
 		return
 	}
-	response, err := ah.rs.Register(req)
+	err := authHandler.authorizationService.Register(ctx, req)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		zap.L().Error("failed to parse registration request", zap.Error(err))
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"AccessToken": response.AccessToken, "RefreshToken": response.RefreshToken})
+	ctx.JSON(http.StatusOK, gin.H{"message": "accept your registration by email"})
 }
 
-//func (ah *AuthHandler) Login(ctx *gin.Context) {
-//
-//}
+func (authHandler *AuthHandler) SingIn(ctx *gin.Context) {
+	var req request.SingInRequest
+	if err := ctx.BindJSON(&req); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		zap.L().Error("failed to parse registration request", zap.Error(err))
+		return
+	}
+	res, err := authHandler.authorizationService.LoginByEmail(req.Email, req.Password)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		zap.L().Error("failed to parse registration request", zap.Error(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (authHandler *AuthHandler) RefreshTokens(ctx *gin.Context) {
+	//TODO
+}
+
+func (authHandler *AuthHandler) Logout(ctx *gin.Context) {
+	//TODO
+}
+
+func (authHandler *AuthHandler) ConfirmEmail(ctx *gin.Context) {
+	uuid := ctx.Query("user")
+	err := authHandler.authorizationService.Confirm(ctx, uuid)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		zap.L().Error("failed to confirm email", zap.Error(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "email confirmed"})
+}

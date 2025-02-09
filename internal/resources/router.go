@@ -23,7 +23,10 @@ func RouterInit() *gin.Engine {
 
 func addHandlers(r *gin.Engine) {
 	rc := handlers.AuthHandler{}
-	r.POST("/registration", rc.Register)
+	r.POST("/sing-up", rc.SingUp)
+	r.POST("/sing-in", rc.SingIn)
+	r.GET("/refresh-tokens", rc.RefreshTokens)
+	r.GET("/confirm-email", rc.ConfirmEmail)
 }
 
 func addMetrics(r *gin.Engine) {

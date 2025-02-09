@@ -6,7 +6,7 @@ import (
 )
 
 type User struct {
-	ID        string         `json:"id"`
+	ID        int64          `json:"id"`
 	UUID      string         `json:"uuid"`
 	FullName  string         `json:"full_name"`
 	Email     string         `json:"email"`
@@ -16,4 +16,5 @@ type User struct {
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt interface{}    `json:"deleted_at"`
+	Status    string         `json:"status"`
 }
