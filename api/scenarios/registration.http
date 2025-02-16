@@ -21,3 +21,7 @@ Content-Type: application/json
   "email": "trololo55721@gmail.com",
   "password": "123321"
 }
+
+### POST logout
+POST {{host}}/auth/logout
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiMTMzZjg3MjUtZjE3NS00NDhjLWExNjctODE2ZGIxMTlhNTYyIiwiZXhwIjoiMjAyNS0wMi0xNlQyMDozMjoyOC4wNTE3OTcyMzcrMDM6MDAiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwic3RhdHVzIjoiY29uZmlybWVkIn0.P5luTApMDYcaKS4ab7fkG63SDuW1u34cJQxfoZ2TsIQ

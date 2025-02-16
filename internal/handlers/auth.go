@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/Vladislav557/auth/internal/lib/jwt"
 	"github.com/Vladislav557/auth/internal/models/http/request"
 	"github.com/Vladislav557/auth/internal/service"
 	"github.com/gin-gonic/gin"
@@ -49,7 +50,10 @@ func (authHandler *AuthHandler) RefreshTokens(ctx *gin.Context) {
 }
 
 func (authHandler *AuthHandler) Logout(ctx *gin.Context) {
-	//TODO
+	authorization := ctx.GetHeader("Authorization")
+	claims, _ := jwt.Parse(authorization)
+	_ = claims
+	ctx.JSON(http.StatusOK, "")
 }
 
 func (authHandler *AuthHandler) ConfirmEmail(ctx *gin.Context) {
