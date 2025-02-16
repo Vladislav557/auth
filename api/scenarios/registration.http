@@ -1,5 +1,5 @@
 ### POST sing-up
-POST {{host}}/sing-up
+POST {{host}}/auth/sing-up
 Content-Type: application/json
 
 {
@@ -10,11 +10,11 @@ Content-Type: application/json
 }
 
 ### GET confirm
-GET {{host}}/confirm-email?user=dd173b77-25bf-4034-9984-e4bcd74e2e69
+GET {{host}}/auth/confirm-email?user=dd173b77-25bf-4034-9984-e4bcd74e2e69
 Content-Type: application/json
 
 ### POST sing-in
-POST {{host}}/sing-in
+POST {{host}}/auth/sing-in
 Content-Type: application/json
 
 {
