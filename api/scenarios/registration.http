@@ -4,13 +4,13 @@ Content-Type: application/json
 
 {
   "fullName": "Vlad Kiselev",
-  "email": "trololo55723@gmail.com",
-  "phone": "79633028231",
+  "email": "trololo55721@gmail.com",
+  "phone": "79633028230",
   "password": "123321"
 }
 
 ### GET confirm
-GET {{host}}/auth/confirm-email?user=dd173b77-25bf-4034-9984-e4bcd74e2e69
+GET {{host}}/auth/confirm-email?user=133f8725-f175-448c-a167-816db119a562
 Content-Type: application/json
 
 ### POST sing-in
@@ -18,6 +18,6 @@ POST {{host}}/auth/sing-in
 Content-Type: application/json
 
 {
-  "email": "trololo55723@gmail.com",
+  "email": "trololo55721@gmail.com",
   "password": "123321"
 }

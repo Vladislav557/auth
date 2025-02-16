@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/Vladislav557/auth/internal/lib/jwt"
-	_ "github.com/Vladislav557/auth/internal/lib/jwt"
 	"github.com/Vladislav557/auth/internal/models/http/request"
 	"github.com/Vladislav557/auth/internal/models/http/response"
 	"github.com/Vladislav557/auth/internal/repository"
@@ -34,7 +33,7 @@ func (authorizationService *AuthorizationService) LoginByEmail(email string, pas
 		return response.TokenResponse{}, err
 	}
 	accessTokenStr, err := jwt.NewAccessToken(user)
-	refreshTokenStr, err := jwt.NewRefreshToken(refreshToken)
+	refreshTokenStr, err := jwt.NewRefreshToken(&refreshToken)
 	if err != nil {
 		return response.TokenResponse{}, err
 	}
