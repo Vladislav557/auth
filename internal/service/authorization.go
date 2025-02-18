@@ -17,6 +17,10 @@ type AuthorizationService struct {
 	notifier               Notifier
 }
 
+//func (authorizationService *AuthorizationService) Logout(claims domain.Claims) error {
+//
+//}
+
 func (authorizationService *AuthorizationService) LoginByEmail(email string, password string) (response.TokenResponse, error) {
 	user, err := authorizationService.userRepository.GetByEmail(email)
 	if err != nil {
@@ -32,8 +36,8 @@ func (authorizationService *AuthorizationService) LoginByEmail(email string, pas
 	if err != nil {
 		return response.TokenResponse{}, err
 	}
-	accessTokenStr, err := jwt.NewAccessToken(user)
-	refreshTokenStr, err := jwt.NewRefreshToken(&refreshToken)
+	accessTokenStr, err := jwt.GetAccessToken(user)
+	refreshTokenStr, err := jwt.GetRefreshToken(&refreshToken)
 	if err != nil {
 		return response.TokenResponse{}, err
 	}
@@ -47,10 +51,9 @@ func (authorizationService *AuthorizationService) Register(ctx context.Context, 
 		return err
 	}
 	user, err := authorizationService.userRepository.CreateUser(ctx, req.FullName, req.Email, req.Phone, passHash, id)
-	if err != nil {
+	if err = authorizationService.notifier.AcceptRegistration(user); err != nil {
 		return err
 	}
-	authorizationService.notifier.AcceptRegistration(user)
 	return nil
 }
 

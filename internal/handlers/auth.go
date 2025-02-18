@@ -51,9 +51,8 @@ func (authHandler *AuthHandler) RefreshTokens(ctx *gin.Context) {
 
 func (authHandler *AuthHandler) Logout(ctx *gin.Context) {
 	authorization := ctx.GetHeader("Authorization")
-	claims, _ := jwt.Parse(authorization)
-	_ = claims
-	ctx.JSON(http.StatusOK, "")
+	claims, _ := jwt.ParseToken(authorization)
+	ctx.JSON(http.StatusOK, claims)
 }
 
 func (authHandler *AuthHandler) ConfirmEmail(ctx *gin.Context) {

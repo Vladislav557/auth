@@ -3,7 +3,7 @@
 CREATE TABLE IF NOT EXISTS refresh_tokens
 (
     id         SERIAL PRIMARY KEY,
-    user_id    INT       NOT NULL,
+    user_uuid  UUID      NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expired_at TIMESTAMP NOT NULL,
     uuid       UUID      NOT NULL UNIQUE,

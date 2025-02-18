@@ -2,63 +2,56 @@ package jwt
 
 import (
 	"errors"
+	"github.com/Vladislav557/auth/internal/models/domain"
 	"github.com/Vladislav557/auth/internal/models/entity"
-	"github.com/golang-jwt/jwt/v5"
-	pg "github.com/lib/pq"
+	jwtlib "github.com/golang-jwt/jwt/v5"
 	"os"
+	"strings"
 	"time"
 )
 
-type UserClaims struct {
-	UUID      string         `json:"UUID"`
-	Roles     pg.StringArray `json:"roles"`
-	Status    string         `json:"status"`
-	ExpiredAt time.Time      `json:"exp"`
-	jwt.RegisteredClaims
-}
-
-func NewAccessToken(user *entity.User) (string, error) {
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-	claims["UUID"] = user.UUID
+func GetAccessToken(user *entity.User) (string, error) {
+	token := jwtlib.New(jwtlib.SigningMethodHS256)
+	claims := token.Claims.(jwtlib.MapClaims)
+	claims["sub"] = user.UUID
+	claims["name"] = user.FullName
 	claims["roles"] = user.Roles
-	claims["status"] = user.Status
-	claims["exp"] = time.Now().Add(time.Minute * 30)
+	claims["iat"] = time.Now().Unix()
+	claims["nbf"] = time.Now().Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	claims["iss"] = os.Getenv("SERVICE_UUID")
 
 	return toString(token)
 }
 
-func NewRefreshToken(refresh *entity.RefreshToken) (string, error) {
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-	claims["UUID"] = refresh.UUID
-	claims["exp"] = refresh.ExpiredAt
-	claims["createdAt"] = refresh.CreatedAt
-	claims["active"] = refresh.Active
-
-	return toString(token)
+func GetRefreshToken(refresh *entity.RefreshToken) (string, error) {
+	return refresh.UUID, nil
 }
 
-func Parse(tokenStr string) (UserClaims, error) {
-	var user UserClaims
+func ParseToken(tokenStr string) (domain.Claims, error) {
+	var user domain.Claims
 	path := os.Getenv("JWT_PRIVATE_KEY")
 	secret, err := os.ReadFile(path)
 	if err != nil {
 		return user, errors.New("secret key not found")
 	}
-	token, err := jwt.ParseWithClaims(tokenStr, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
+	tokenWithoutBearer := strings.TrimPrefix(tokenStr, "Bearer ")
+	token, err := jwtlib.ParseWithClaims(tokenWithoutBearer, &domain.Claims{}, func(token *jwtlib.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwtlib.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected signing method")
+		}
 		return secret, nil
 	})
 	if err != nil {
 		return user, err
-	} else if claims, ok := token.Claims.(*UserClaims); ok {
-		return *claims, nil
-	} else {
-		return user, nil
 	}
+	if claims, ok := token.Claims.(*domain.Claims); ok && token.Valid {
+		return *claims, nil
+	}
+	return user, errors.New("token not valid")
 }
 
-func toString(token *jwt.Token) (string, error) {
+func toString(token *jwtlib.Token) (string, error) {
 	path := os.Getenv("JWT_PRIVATE_KEY")
 	secret, err := os.ReadFile(path)
 	if err != nil {
