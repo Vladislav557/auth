@@ -51,8 +51,19 @@ func (authHandler *AuthHandler) RefreshTokens(ctx *gin.Context) {
 
 func (authHandler *AuthHandler) Logout(ctx *gin.Context) {
 	authorization := ctx.GetHeader("Authorization")
-	claims, _ := jwt.ParseToken(authorization)
-	ctx.JSON(http.StatusOK, claims)
+	claims, err := jwt.ParseToken(authorization)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		zap.L().Error("failed to parse registration request", zap.Error(err))
+		return
+	}
+	err = authHandler.authorizationService.Logout(ctx, claims)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		zap.L().Error("failed to parse registration request", zap.Error(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"success": true})
 }
 
 func (authHandler *AuthHandler) ConfirmEmail(ctx *gin.Context) {

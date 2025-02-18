@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/Vladislav557/auth/internal/lib/jwt"
+	"github.com/Vladislav557/auth/internal/models/domain"
 	"github.com/Vladislav557/auth/internal/models/http/request"
 	"github.com/Vladislav557/auth/internal/models/http/response"
 	"github.com/Vladislav557/auth/internal/repository"
@@ -17,9 +18,17 @@ type AuthorizationService struct {
 	notifier               Notifier
 }
 
-//func (authorizationService *AuthorizationService) Logout(claims domain.Claims) error {
-//
-//}
+func (authorizationService *AuthorizationService) Logout(ctx context.Context, claims domain.Claims) error {
+	user, err := authorizationService.userRepository.GetByUUID(ctx, claims.Sub)
+	if err != nil {
+		return err
+	}
+	err = authorizationService.refreshTokenRepository.DeactivateAllRefreshTokens(user)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func (authorizationService *AuthorizationService) LoginByEmail(email string, password string) (response.TokenResponse, error) {
 	user, err := authorizationService.userRepository.GetByEmail(email)
