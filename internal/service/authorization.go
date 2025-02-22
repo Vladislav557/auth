@@ -30,7 +30,7 @@ func (authorizationService *AuthorizationService) Logout(ctx context.Context, cl
 	return nil
 }
 
-func (authorizationService *AuthorizationService) LoginByEmail(email string, password string) (response.TokenResponse, error) {
+func (authorizationService *AuthorizationService) LoginByEmail(email, password, device string) (response.TokenResponse, error) {
 	user, err := authorizationService.userRepository.GetByEmail(email)
 	if err != nil {
 		return response.TokenResponse{}, err
@@ -41,7 +41,7 @@ func (authorizationService *AuthorizationService) LoginByEmail(email string, pas
 	if err = bcrypt.CompareHashAndPassword(user.Password, []byte(password)); err != nil {
 		return response.TokenResponse{}, errors.New("password incorrect")
 	}
-	refreshToken, err := authorizationService.refreshTokenRepository.CreateRefreshToken(user)
+	refreshToken, err := authorizationService.refreshTokenRepository.CreateRefreshToken(user, device)
 	if err != nil {
 		return response.TokenResponse{}, err
 	}

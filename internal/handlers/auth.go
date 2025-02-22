@@ -31,12 +31,13 @@ func (authHandler *AuthHandler) SingUp(ctx *gin.Context) {
 
 func (authHandler *AuthHandler) SingIn(ctx *gin.Context) {
 	var req request.SingInRequest
+	device := ctx.GetHeader("Device-UUID")
 	if err := ctx.BindJSON(&req); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		zap.L().Error("failed to parse registration request", zap.Error(err))
 		return
 	}
-	res, err := authHandler.authorizationService.LoginByEmail(req.Email, req.Password)
+	res, err := authHandler.authorizationService.LoginByEmail(req.Email, req.Password, device)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		zap.L().Error("failed to parse registration request", zap.Error(err))

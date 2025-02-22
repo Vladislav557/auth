@@ -10,12 +10,13 @@ Content-Type: application/json
 }
 
 ### GET confirm
-GET {{host}}/auth/confirm-email?user=5588aa9f-0b8a-4788-865a-1b7ac0510e2e
+GET {{host}}/auth/confirm-email?user=bcee4eef-0fe1-45c2-96dd-08dc69d6b050
 Content-Type: application/json
 
 ### POST sing-in
 POST {{host}}/auth/sing-in
 Content-Type: application/json
+Device-UUID: "55898aaf-0b8a-4788-865a-1b7ac0510e3e"
 
 {
   "email": "trololo55721@gmail.com",

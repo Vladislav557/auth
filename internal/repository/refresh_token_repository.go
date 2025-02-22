@@ -9,11 +9,18 @@ import (
 
 type RefreshTokenRepository struct{}
 
-func (refreshTokenRepository *RefreshTokenRepository) GetActiveRefreshToken(user *entity.User) (entity.RefreshToken, error) {
+func (refreshTokenRepository *RefreshTokenRepository) GetActiveRefreshToken(user *entity.User, device string) (entity.RefreshToken, error) {
 	var refreshToken entity.RefreshToken
-	err := postgres.DB.QueryRow(
-		"SELECT id, uuid, created_at, expired_at, uuid, active FROM refresh_tokens WHERE user_id = ($1) AND active = TRUE",
-		user.ID,
+	deviceUUID, err := uuid.Parse(device)
+	if err != nil {
+		return entity.RefreshToken{}, err
+	}
+	now := time.Now()
+	err = postgres.DB.QueryRow(
+		"SELECT id, uuid, created_at, expired_at, user_uuid, active, device_uuid FROM refresh_tokens WHERE user_uuid = $1 AND device_uuid = $2 AND active = TRUE AND expired_at > $3",
+		user.UUID,
+		deviceUUID,
+		now,
 	).Scan(
 		&refreshToken.ID,
 		&refreshToken.UUID,
@@ -21,6 +28,7 @@ func (refreshTokenRepository *RefreshTokenRepository) GetActiveRefreshToken(user
 		&refreshToken.ExpiredAt,
 		&refreshToken.UserUUID,
 		&refreshToken.Active,
+		&refreshToken.DeviceUUID,
 	)
 	if err != nil {
 		return refreshToken, err
@@ -50,20 +58,29 @@ func (refreshTokenRepository *RefreshTokenRepository) DeactivateAllRefreshTokens
 	return nil
 }
 
-func (refreshTokenRepository *RefreshTokenRepository) CreateRefreshToken(user *entity.User) (entity.RefreshToken, error) {
-	if token, err := refreshTokenRepository.GetActiveRefreshToken(user); err != nil {
+func (refreshTokenRepository *RefreshTokenRepository) CreateRefreshToken(user *entity.User, device string) (entity.RefreshToken, error) {
+	token, err := refreshTokenRepository.GetActiveRefreshToken(user, device)
+	if err != nil {
 		if err = refreshTokenRepository.DeactivateRefreshToken(token); err != nil {
 			return entity.RefreshToken{}, err
 		}
 	}
+	if token.ID != 0 {
+		return token, nil
+	}
 	var refreshToken entity.RefreshToken
 	expiredAt := time.Now().Add(time.Hour * 24 * 30)
 	id := uuid.New().String()
-	err := postgres.DB.QueryRow(
-		"INSERT INTO refresh_tokens (user_uuid, expired_at, uuid) VALUES ($1, $2, $3) RETURNING id, uuid, created_at, expired_at, uuid, active",
+	deviceUUID, err := uuid.Parse(device)
+	if err != nil {
+		return entity.RefreshToken{}, err
+	}
+	err = postgres.DB.QueryRow(
+		"INSERT INTO refresh_tokens (user_uuid, expired_at, uuid, device_uuid) VALUES ($1, $2, $3, $4) RETURNING id, uuid, created_at, expired_at, uuid, active, device_uuid",
 		user.UUID,
 		expiredAt,
 		id,
+		deviceUUID,
 	).Scan(
 		&refreshToken.ID,
 		&refreshToken.UUID,
@@ -71,6 +88,7 @@ func (refreshTokenRepository *RefreshTokenRepository) CreateRefreshToken(user *e
 		&refreshToken.ExpiredAt,
 		&refreshToken.UserUUID,
 		&refreshToken.Active,
+		&refreshToken.DeviceUUID,
 	)
 	if err != nil {
 		return entity.RefreshToken{}, err
