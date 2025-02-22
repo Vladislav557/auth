@@ -10,13 +10,13 @@ Content-Type: application/json
 }
 
 ### GET confirm
-GET {{host}}/auth/confirm-email?user=bcee4eef-0fe1-45c2-96dd-08dc69d6b050
+GET {{host}}/auth/confirm-email?user=d7bc692a-5d58-4db4-bc96-3d854c4ad62b
 Content-Type: application/json
 
 ### POST sing-in
 POST {{host}}/auth/sing-in
 Content-Type: application/json
-Device-UUID: "55898aaf-0b8a-4788-865a-1b7ac0510e3e"
+Device-UUID: 55898aaf-0b8a-4788-865a-1b7ac0510e3e
 
 {
   "email": "trololo55721@gmail.com",
@@ -25,4 +25,5 @@ Device-UUID: "55898aaf-0b8a-4788-865a-1b7ac0510e3e"
 
 ### POST logout
 POST {{host}}/auth/logout
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk5MDMzMzQsImlhdCI6MTczOTkwMjQzNCwiaXNzIjoiYWM3M2E4MzItYTQ1Yi00MDExLTk5ZjUtZjRmZmIxOGRhYmExIiwibmFtZSI6IlZsYWQgS2lzZWxldiIsIm5iZiI6MTczOTkwMjQzNCwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInN1YiI6IjU1ODhhYTlmLTBiOGEtNDc4OC04NjVhLTFiN2FjMDUxMGUyZSJ9.eit-c14dQKeEp-JILWpAhcDqRchQrflexsBe0qxdPtg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDAyMzE1MjgsImlhdCI6MTc0MDIzMDYyOCwiaXNzIjoiYWM3M2E4MzItYTQ1Yi00MDExLTk5ZjUtZjRmZmIxOGRhYmExIiwibmFtZSI6IlZsYWQgS2lzZWxldiIsIm5iZiI6MTc0MDIzMDYyOCwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInN1YiI6ImQ3YmM2OTJhLTVkNTgtNGRiNC1iYzk2LTNkODU0YzRhZDYyYiJ9.vrrP9YrctoN1GeIqxKiGYRGMawRDxbBY7175uldRHaI
+Device-UUID: 55898aaf-0b8a-4788-865a-1b7ac0510e3e

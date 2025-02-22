@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS refresh_tokens
     expired_at  TIMESTAMP NOT NULL,
     uuid        UUID      NOT NULL UNIQUE,
     active      BOOLEAN   NOT NULL DEFAULT TRUE,
-    device_uuid UUID      NOT NULL UNIQUE
+    device_uuid UUID      NOT NULL
 );
 -- +goose StatementEnd
 

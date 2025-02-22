@@ -47,10 +47,15 @@ func (refreshTokenRepository *RefreshTokenRepository) DeactivateRefreshToken(ref
 	return nil
 }
 
-func (refreshTokenRepository *RefreshTokenRepository) DeactivateAllRefreshTokens(user *entity.User) error {
-	_, err := postgres.DB.Exec(
-		"UPDATE refresh_tokens SET active = FALSE WHERE user_uuid = ($1) AND active = TRUE",
+func (refreshTokenRepository *RefreshTokenRepository) DeactivateRefreshTokenByUserAndDevice(user *entity.User, device string) error {
+	deviceUUID, err := uuid.Parse(device)
+	if err != nil {
+		return err
+	}
+	_, err = postgres.DB.Exec(
+		"UPDATE refresh_tokens SET active = FALSE WHERE user_uuid = $1 AND active = TRUE AND device_uuid = $2",
 		user.UUID,
+		deviceUUID,
 	)
 	if err != nil {
 		return err

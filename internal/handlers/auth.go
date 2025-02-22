@@ -53,12 +53,13 @@ func (authHandler *AuthHandler) RefreshTokens(ctx *gin.Context) {
 func (authHandler *AuthHandler) Logout(ctx *gin.Context) {
 	authorization := ctx.GetHeader("Authorization")
 	claims, err := jwt.ParseToken(authorization)
+	device := ctx.GetHeader("Device-UUID")
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		zap.L().Error("failed to parse registration request", zap.Error(err))
 		return
 	}
-	err = authHandler.authorizationService.Logout(ctx, claims)
+	err = authHandler.authorizationService.Logout(ctx, claims, device)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		zap.L().Error("failed to parse registration request", zap.Error(err))

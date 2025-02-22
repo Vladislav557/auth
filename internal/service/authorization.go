@@ -18,12 +18,12 @@ type AuthorizationService struct {
 	notifier               Notifier
 }
 
-func (authorizationService *AuthorizationService) Logout(ctx context.Context, claims domain.Claims) error {
+func (authorizationService *AuthorizationService) Logout(ctx context.Context, claims domain.Claims, device string) error {
 	user, err := authorizationService.userRepository.GetByUUID(ctx, claims.Sub)
 	if err != nil {
 		return err
 	}
-	err = authorizationService.refreshTokenRepository.DeactivateAllRefreshTokens(user)
+	err = authorizationService.refreshTokenRepository.DeactivateRefreshTokenByUserAndDevice(user)
 	if err != nil {
 		return err
 	}
