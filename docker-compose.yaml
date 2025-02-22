@@ -3,10 +3,10 @@ networks:
     external: true
 
 services:
-  postgres-test-db:
+  postgres-test-auth-db:
     image: postgres:16-alpine
-    hostname: postgres-test-db
-    container_name: postgres-test-db
+    hostname: postgres-test-auth-db
+    container_name: postgres-test-auth-db
     environment:
       POSTGRES_USER: "dev"
       POSTGRES_DB: "dev"
