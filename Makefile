@@ -1,4 +1,4 @@
-DB ?= postgresql://dev:dev@172.1.10.1:54323/dev?sslmode=disable
+DB ?= postgresql://dev:dev@172.1.10.1:54323/auth?sslmode=disable
 MIGRATION_NAME ?=
 
 jwt-generate:
